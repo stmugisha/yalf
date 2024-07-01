@@ -1,2 +1,2 @@
-# dinfo
+# datum
 Data Platform
