@@ -1,0 +1,26 @@
+default_stages:
+  - commit
+  - manual
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0  # Use the ref you want to point at
+  hooks:
+    -  id: check-added-large-files
+    -  id: check-executables-have-shebangs
+    -  id: check-case-conflict
+    -  id: check-merge-conflict
+    -  id: end-of-file-fixer
+    -  id: mixed-line-ending
+    -  id: trailing-whitespace
+
+#- repo: https://github.com/timothycrosley/isort
+#    rev: 5.12.0
+#    hooks:
+#      - id: isort
+
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.0.291
+  hooks:
+    - id: ruff
+      args: [--fix, --exit-non-zero-on-fix]
