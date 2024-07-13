@@ -46,7 +46,7 @@ class DataLoader:
 		"""Checks file type and Reads it into memory.
 
 		Args:
-			file: dir to the the file to read.
+			file: dir/url to the the file to read.
 
 		Returns:
 			File content dictionary.
