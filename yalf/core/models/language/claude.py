@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from base import YalfModel
 
-class Claude(YalfModel):
+class ClaudeClient(YalfModel):
 	"""Claude models class."""
 
 	def __init__(self):
