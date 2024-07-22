@@ -9,5 +9,3 @@
 #For more information, please refer to <https://unlicense.org>
 
 from __future__ import annotations
-
-# Gemini API-key  AIzaSyC-uIF-9r_7h0qf7IzED38DCDuguoK2AHQ

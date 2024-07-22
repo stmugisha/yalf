@@ -17,8 +17,8 @@ class YalfModel(ABC):
 	"""Yalf LLM model base class."""
 
 	@abstractmethod
-	def _generate(self, prompt):
-		"""Q&A text generation method."""
+	def chat(self, prompt):
+		"""Question and Answer generation."""
 		pass
 
 	@abstractmethod
