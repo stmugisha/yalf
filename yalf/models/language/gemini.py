@@ -1,16 +1,18 @@
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-#EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-#MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-#IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-#OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-#ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-#OTHER DEALINGS IN THE SOFTWARE.
+"""
 
-#For more information, please refer to <https://unlicense.org>
-# Gemini API-key  AIzaSyC-uIF-9r_7h0qf7IzED38DCDuguoK2AHQ  #'gemini-1.5-flash'
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+"""
+
 from __future__ import annotations
 
-from typing import Optional
+from typing import Optional, Dict, List
 import google.generativeai as genai
 import PIL
 
@@ -23,17 +25,47 @@ from yalf.errors import ConfigurationError, ModelError
 class GeminiClient(YalfModel):
 	"""Gemini model clients."""
 
-	SYSTEM_PROMPT = "You are a very creative and helpful agent"
+	SYSTEM_PROMPT = "You are a very creative, submissive and helpful agent."
+	GENERATION_CONFIG = {
+		"temperature": 0,
+		"top_p": 0,
+		"top_k": 1,
+		"max_output_tokens": 8192,
+		"response_mime_type": "text/plain",
+	}
+	SAFETY_SETTINGS = [
+		{
+			"category": "HARM_CATEGORY_HARASSMENT",
+			"threshold": "BLOCK_ONLY_HIGH",
+		},
+		{
+			"category": "HARM_CATEGORY_HATE_SPEECH",
+			"threshold": "BLOCK_ONLY_HIGH",
+		},
+		{
+			"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+			"threshold": "BLOCK_ONLY_HIGH",
+		},
+		{
+			"category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+			"threshold": "BLOCK_ONLY_HIGH",
+		},
+	]
 
-	def __init__(self, model_name: str, api_key: Optional[str] = None):
+	def __init__(
+		self,
+		model_name: str,
+		api_key: Optional[str] = None,
+		generation_config: Dict[str] = GENERATION_CONFIG,
+		safety_settings: List[Dict[str]] = SAFETY_SETTINGS
+	):
 		self.model_name = model_name
 		self._configure_api(api_key)
 		self.model = genai.GenerativeModel(model_name=self.model_name)
-		#self.embedding_model = None
+		#self.embedding_model = None ##add modes to generate function
 		self.logger = logger
 		self.logger.info(f"Initialized GeminiClient with model: {self.model_name}")
 
-		#response = model.generate_content('Teach me about how an LLM works')
 	def _configure_api(self, api_key: Optional[str] = None) -> None:
 		"""Configure API with provided api key."""
 		key = api_key or get_api_key("Gemini")
@@ -46,18 +78,37 @@ class GeminiClient(YalfModel):
 		genai.configure(api_key=key)
 		self.logger.debug("API configured")
 
+	@staticmethod
+	def upload_to_gemini(file_path: str): #use for chat mode
+		"""Upload files to Gemini.
+
+		Args:
+			file_path: File path or URL
+		"""
+		#self.logger.info(f"Uploading {file_path} to Gemini.")
+		_file = genai.upload_file(file_path)
+		#self.logger.info(f"File {_file.uri} uploaded")
+		return _file
+
+	@property # way of returning read-only objects/properties
+	def get_name(self):
+		"""Returns model name."""
+		return self.model_name
+
 	def generate(
 		self,
 		prompt: str,
-		image: Optional[str] = None,
-		streaming: bool = False
+		image: Optional[List[str]] = None,
+		streaming: bool = False,
+		mode: str = "qa" #chat,
 	) -> str:
 		"""Question and answer generation.
 
 		Args:
-			prompt: text prompt (question)
-			media: image file path or url
+			prompt: Text prompt (question)
+			image: List of image file paths or urls
 			streaming: If True, returns streamed responses, false otherwise
+			mode: Model task mode. `chat` or `qa`(question & answer)
 
 		Returns:
 			Response string.
@@ -73,10 +124,14 @@ class GeminiClient(YalfModel):
 				prompt=prompt
 			)
 
-		response = self.model.generate_content(prompt)
+		if mode == "qa":
+			response = self.model.generate_content(prompt)
+		else:
+			response, chat = self.chat(prompt=prompt)
+
 		if len(response.text) < 1:
 			self.logger.debug(f"Unable to service request: {response.prompt_feedback}")
-			raise ModelError(f"ModelError: {response.prompt_feedback}")
+			raise ModelError(f"ModelError: {response.prompt_feedback}, mode: {mode}")
 		self.logger.debug("Response successfully generated!")
 		return response.text
 
@@ -93,4 +148,4 @@ class GeminiClient(YalfModel):
 		_chat = self.model.start_chat(history=[])
 		response = _chat.send_message(prompt, stream=True)
 
-		return response.text
+		return response.text, _chat
