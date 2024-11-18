@@ -11,5 +11,5 @@ A Multimodal Language Model orchestration framework.
 ## RoadMap
 
 - [] Add support for various state of the art Language models.
-- [] Audio support. # setup language and audio agents that invoke models to do stuff
+- [] Audio support.
 - [] Workflows.
