@@ -7,7 +7,8 @@
 #OTHER DEALINGS IN THE SOFTWARE.
 
 #For more information, please refer to <https://unlicense.org>
-# Yalf helper functions
+""" Yalf helper functions."""
+
 from __future__ import annotations
 
 import os
