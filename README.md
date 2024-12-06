@@ -1,15 +1,16 @@
 ## Yet Another Language Model Framework (YALF)
 
-A Multimodal Language Model orchestration framework.
+A Multimodal Model Agents orchestration framework.
 
 ## Motivation
 
-* Support for language (text & speech) models in one library.
+* POC for AI agents development.
+* Integrate models from multiple sources in one package.
 * Enable quick cross modality experimentation.
-* Setup building blocks for ai agents development.
 
 ## RoadMap
 
-- [] Add support for various state of the art Language models.
-- [] Audio support.
-- [] Workflows.
+- [] Add top language models support.
+- [] Build Agents backend.
+- [] Add Agent Workflows support.
+- [] Multimodality support
