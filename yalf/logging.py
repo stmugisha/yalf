@@ -23,7 +23,7 @@ def get_logger(
 	name: str = "Yalf",
 	log_level: str = "INFO",
 	log_file: Optional[str] = None
-) -> logging.Logger:
+):
 	"""Set up logger with name `name` and logging level `log_level`.
 
 	Args:

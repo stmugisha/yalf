@@ -1,5 +1,4 @@
 """
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -11,7 +10,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
 """
 
 from __future__ import annotations
@@ -27,9 +25,10 @@ from yalf.errors import ConfigurationError, ModelError
 
 
 class GeminiClient(YalfModel):
-	"""Gemini model clients."""
+	"""Gemini model client."""
 
 	SYSTEM_PROMPT = "You are a very creative, submissive and helpful agent."
+
 	GENERATION_CONFIG = {
 		"temperature": 0,
 		"top_p": 0,
@@ -37,6 +36,7 @@ class GeminiClient(YalfModel):
 		"max_output_tokens": 8192,
 		"response_mime_type": "text/plain",
 	}
+
 	SAFETY_SETTINGS = [
 		{
 			"category": "HARM_CATEGORY_HARASSMENT",
@@ -66,7 +66,6 @@ class GeminiClient(YalfModel):
 		self.model_name = model_name
 		self._configure_api(api_key)
 		self.model = genai.GenerativeModel(model_name=self.model_name)
-		#self.embedding_model = None ##add modes to generate function
 		self.logger = logger
 		self.logger.info(f"Initialized GeminiClient with model: {self.model_name}")
 
@@ -89,12 +88,10 @@ class GeminiClient(YalfModel):
 		Args:
 			file_path: File path or URL
 		"""
-		#self.logger.info(f"Uploading {file_path} to Gemini.")
 		_file = genai.upload_file(file_path)
-		#self.logger.info(f"File {_file.uri} uploaded")
 		return _file
 
-	@property # way of returning read-only objects/properties
+	@property
 	def get_name(self):
 		"""Returns model name."""
 		return self.model_name
