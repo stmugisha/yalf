@@ -4,7 +4,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-		http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,37 +20,37 @@ from typing import Optional
 
 
 def get_logger(
-	name: str = "Yalf",
-	log_level: str = "INFO",
-	log_file: Optional[str] = None
+  name: str = "Yalf",
+  log_level: str = "INFO",
+  log_file: Optional[str] = None
 ):
-	"""Set up logger with name `name` and logging level `log_level`.
+  """Set up logger with name `name` and logging level `log_level`.
 
-	Args:
-		name: logger name
-		level: Log level
-		file: File to write logging info.
+  Args:
+    name: logger name
+    level: Log level
+    file: File to write logging info.
 
-	Returns:
-		Loggger object
-	"""
-	logger = logging.getLogger(name)
-	logger.setLevel(log_level)
+  Returns:
+    Loggger object
+  """
+  logger = logging.getLogger(name)
+  logger.setLevel(log_level)
 
-	formatter = logging.Formatter(
-		"%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-	)
-	# Handlers
-	console_handler = logging.StreamHandler(sys.stdout)
-	console_handler.setFormatter(formatter)
-	logger.addHandler(console_handler)
+  formatter = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  )
+  # Handlers
+  console_handler = logging.StreamHandler(sys.stdout)
+  console_handler.setFormatter(formatter)
+  logger.addHandler(console_handler)
 
-	if log_file:
-		file_handler = logging.FileHandler(log_file)
-		file_handler.setFormatter(formatter)
-		logger.addHandler(file_handler)
+  if log_file:
+    file_handler = logging.FileHandler(log_file)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
 
-	return logger
+  return logger
 
 
 logger = get_logger()
